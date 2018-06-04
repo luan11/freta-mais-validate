@@ -6,7 +6,7 @@
 </head>
 <body>
 
-     <select class="form-control" name="hora_saida" required="">
+     <select class="form-control" name="hora_saida" id="hora_saida" required="">
           <option value="">Selecione</option>
           <option value="0000">00:00</option>
           <option value="0030">00:30</option>
@@ -112,13 +112,74 @@
 
      <select id="tipo_diaria" class="form-control" name="daily" required="">
           <option value="">Selecione o tipo da diária</option>
-          <option value="meia">Meia diária (6 horas)</option>
-          <option value="completa">Diária Completa (10 horas)</option>
+          <option id="meia" value="meia">Meia diária (6 horas)</option>
+          <option id="completa" value="completa">Diária Completa (10 horas)</option>
      </select>
 
-     <script src="jquery-3.3.1.min.js"></script>
-     <script>
+     <input id="guarda_valor" type="text" value="" hidden>
 
-     </script>
+     <script src="jquery-3.3.1.min.js"></script>
+     <script src="moment.js"></script>
+     <script>
+          var horaSaida = $('#hora_saida');
+          var horaRetorno = $('#hora_retorno');
+          var guardaValor = $('#guarda_valor');
+          var tipoDiaria_meia = $('#meia');
+          var tipoDiaria_completa = $('#completa');
+          
+          horaSaida.on('change', function(){
+               var horarioSaida = horaSaida.val();
+               var horaSaida_convertido = convertHours(horarioSaida);
+               if (horarioSaida != ""){
+                    guardaValor.attr('value',horaSaida_convertido);
+               }
+          })
+
+          horaRetorno.on('change', function(){
+               var horarioRetorno = horaRetorno.val();
+               if (horarioRetorno != ""){
+                    var horarioRetorno_convertido = convertHours(horarioRetorno);
+                    var horaSaida_valor = guardaValor.val();
+                    var diferenciaHoras = subHours(horaSaida_valor,horarioRetorno_convertido);
+                    diferenciaHoras = diferenciaHoras.replace(":",".");
+                    diferenciaHoras = parseFloat(diferenciaHoras);
+                    if (parseFloat(horarioRetorno_convertido.replace(":",".")) == parseFloat(horaSaida_valor.replace(":",".")) && diferenciaHoras == 0){
+                              tipoDiaria_meia.attr('disabled','disabled');
+                              tipoDiaria_completa.attr('selected','selected');   
+                    }else{
+                         tipoDiaria_meia.removeAttr('disabled');
+                         tipoDiaria_completa.removeAttr('selected');
+                         if (diferenciaHoras > 6){
+                              tipoDiaria_meia.removeAttr('selected');
+                              tipoDiaria_completa.removeAttr('disabled');
+                              tipoDiaria_meia.attr('disabled','disabled');
+                              tipoDiaria_completa.attr('selected','selected');
+                         }
+                         if (diferenciaHoras <= 6){
+                              tipoDiaria_meia.removeAttr('disabled');
+                              tipoDiaria_completa.removeAttr('selected');
+                              tipoDiaria_meia.attr('selected','selected');
+                              tipoDiaria_completa.attr('disabled','disabled');
+                         }
+                    }
+               }
+          })
+
+          // convert to hours function
+          function convertHours(hours){
+               hours = moment(hours,"HH:mm");
+               hours = hours.format("HH:mm");
+               return hours;
+          }
+
+          // sub hours function
+          function subHours(init,end){
+               var newEnd = init.split(":");
+               var initSub = moment(end,"HH:mm").subtract({hours: newEnd[0], minutes: newEnd[1]});
+               initSub = initSub.format("HH:mm");
+               return initSub;
+          }     
+
+</script>
 </body>
 </html>
