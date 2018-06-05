@@ -1,87 +1,113 @@
-// resgate de variaveis inciais
-var horaSaida = $('#hora_saida');
-var horaRetorno = $('#hora_retorno');
-var guardaValor = $('#guarda_valor');
+var hora_saida = $('#hora_saida');
+var hora_retorno = $('#hora_retorno');
+var aux_valor_saida = $('#guarda_valor_saida');
+var aux_valor_retorno = $('#guarda_valor_retorno');
+var sel_saida = $('#sel_saida');
+var sel_retorno = $('#sel_retorno');
 var tipoDiaria_meia = $('#meia');
 var tipoDiaria_completa = $('#completa');
-var aviso_hRetorno = $('#aviso_hRetorno');
 
-// pega horario de saida
-horaSaida.on('change', function(){
-     var horarioSaida = horaSaida.val();
-     var horaSaida_convertido = convertHours(horarioSaida);
-     aviso_hRetorno.removeAttr('hidden');
-     // verifica se horario de saida é diferente de vazio
-     if (horarioSaida != ""){
-          guardaValor.attr('value',horaSaida_convertido);
+hora_saida.on('change',function(){
+     var horario_saida = hora_saida.val();
+     horario_saida = toCalc(horario_saida);
+     if (horario_saida !== ""){
+          aux_valor_saida.attr('value',horario_saida);
+          sel_saida.attr('disabled','disabled');
      }
 })
 
-/* 
-     verifica se o horario de saida está definido
-     **se nao informa um alerta na tela**
-     **se sim continua a validação**
- */
-horaRetorno.on('click', function(){
-     if (guardaValor.val() == ""){
+hora_retorno.on('click', function(){
+     if (aux_valor_saida.val() === "" && aux_valor_retorno.val() === ""){
           alert("Selecione o horário de saída primeiro!");
      }else{
-          // pega horario de retorno
-          horaRetorno.on('change', function(){
-          var horarioRetorno = horaRetorno.val();
-          aviso_hRetorno.attr('hidden','hidden');
-          // verifica se o horario de retorno é diferente de vazio
-          if (horarioRetorno != ""){
-               // pega variaveis para trabalhar o calc de horas
+     hora_retorno.on('change',function(){
+          var horario_retorno = hora_retorno.val();
+          horario_retorno = toCalc(horario_retorno);
+          if (horario_retorno !== ""){
+               aux_valor_retorno.attr('value',horario_retorno);
+               sel_retorno.attr('disabled','disabled');
                var diariaSelecionada = $('#tipo_diaria option:selected').val();
-               var horaRetorno_convertido = convertHours(horarioRetorno);
-               var horaSaida_valor = guardaValor.val();
-               // efetua calculo de horas
-               var diferenciaHoras = subHours(horaSaida_valor,horaRetorno_convertido);
-               diferenciaHoras = diferenciaHoras.replace(":",".");
-               diferenciaHoras = parseFloat(diferenciaHoras);
-               // faz as verficacoes do calculo de horas
-               if (parseFloat(horaRetorno_convertido.replace(":",".")) == parseFloat(horaSaida_valor.replace(":",".")) && diferenciaHoras == 0){
-                         if (diariaSelecionada == "meia"){
-                              tipoDiaria_meia.removeAttr('selected');
-                              tipoDiaria_completa.removeAttr('disabled');
-                         }
-                         tipoDiaria_meia.attr('disabled','disabled');
-                         tipoDiaria_completa.attr('selected','selected');
-               }else{
-                    if (diferenciaHoras > 6){
-                         if (diariaSelecionada == "meia"){
-                              tipoDiaria_meia.removeAttr('selected');
-                              tipoDiaria_completa.removeAttr('disabled');
-                         }
-                         tipoDiaria_meia.attr('disabled','disabled');
-                         tipoDiaria_completa.attr('selected','selected');
+          }
+          if (aux_valor_saida.val() !== "" && aux_valor_retorno.val() !== ""){
+               var diff_hours = calcHours(aux_valor_saida.val(),aux_valor_retorno.val());
+               console.log(diff_hours);
+               if (diff_hours == 0){
+                     if (diariaSelecionada == "meia"){
+                         tipoDiaria_meia.removeAttr('selected');
+                         tipoDiaria_completa.removeAttr('disabled');
                     }
-                    if (diferenciaHoras <= 6){
+                    tipoDiaria_meia.attr('disabled','disabled');
+                    tipoDiaria_completa.attr('selected','selected');
+               }else{
+                    if (diff_hours > 6){
+                         if (diariaSelecionada == "meia"){
+                              tipoDiaria_meia.removeAttr('selected');
+                              tipoDiaria_completa.removeAttr('disabled');
+                    }
+                    tipoDiaria_meia.attr('disabled','disabled');
+                    tipoDiaria_completa.attr('selected','selected');
+               }
+                    if (diff_hours <= 6){
                          if (diariaSelecionada == "completa"){
                               tipoDiaria_meia.removeAttr('disabled');
                               tipoDiaria_completa.removeAttr('selected');
-                         }
-                         tipoDiaria_meia.attr('selected','selected');
-                         tipoDiaria_completa.attr('disabled','disabled');
                     }
+                    tipoDiaria_meia.attr('selected','selected');
+                    tipoDiaria_completa.attr('disabled','disabled');
                }
           }
-          })
+          }
+     })
      }
 })
 
-// convert to hours function
-function convertHours(hours){
-     hours = moment(hours,"HH:mm");
-     hours = hours.format("HH:mm");
-     return hours;
+// convert to calc
+function toCalc(hour){
+     hour = hour.substr(0,2)+"."+hour.substr(2);
+     return hour;
 }
 
-// sub hours function
-function subHours(init,end){
-     var newEnd = init.split(":");
-     var initSub = moment(end,"HH:mm").subtract({hours: newEnd[0], minutes: newEnd[1]});
-     initSub = initSub.format("HH:mm");
-     return initSub;
+function calcHours(hourGoing,hourReturn){
+     hourGoing = hourGoing.split(".");
+     hourReturn = hourReturn.split(".");
+
+     // calc indice 0 do array
+     if (hourGoing[0] < hourReturn[0]){
+          var diff_0 = hourReturn[0] - hourGoing[0];
+     }
+     if (hourGoing[0] > hourReturn[0]){
+          var diff_0 = 24 - hourGoing[0] + parseFloat(hourReturn[0]);
+     }
+     if (hourGoing[0] == hourReturn[0]){
+          var diff_0 = 0;
+     }
+
+     // calc indice 1 do array
+     if (parseInt(hourGoing[1]) == 30 && parseInt(hourReturn[1]) != 30){
+          var diff_1 = 30;
+     }
+     if (parseInt(hourGoing[1]) != 30 && parseInt(hourReturn[1]) == 30){
+          var diff_1 = 30;
+     }
+     if (parseInt(hourGoing[1]) == parseInt(hourReturn[1])){
+          var diff_1 = 0;
+     }
+
+     // finaliza calc
+     if (diff_0 >= 10){
+          var diff = diff_0.toString() + diff_1.toString();
+          diff = diff.substr(0,2) + "." + diff.substr(2);
+          diff = parseFloat(diff,10);
+     }
+     if (diff_0 < 10){
+          var diff = diff_0.toString() + diff_1.toString();
+          diff = diff.substr(0,1) + "." + diff.substr(1);
+          diff = parseFloat(diff,10);
+     }
+
+     if (diff == 0.3){
+          // diff = 23.3;
+     }
+
+     return diff;
 }
