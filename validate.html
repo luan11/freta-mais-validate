@@ -135,33 +135,46 @@
                }
           })
 
-          horaRetorno.on('change', function(){
-               var horarioRetorno = horaRetorno.val();
-               if (horarioRetorno != ""){
-                    var horarioRetorno_convertido = convertHours(horarioRetorno);
-                    var horaSaida_valor = guardaValor.val();
-                    var diferenciaHoras = subHours(horaSaida_valor,horarioRetorno_convertido);
-                    diferenciaHoras = diferenciaHoras.replace(":",".");
-                    diferenciaHoras = parseFloat(diferenciaHoras);
-                    if (parseFloat(horarioRetorno_convertido.replace(":",".")) == parseFloat(horaSaida_valor.replace(":",".")) && diferenciaHoras == 0){
-                              tipoDiaria_meia.attr('disabled','disabled');
-                              tipoDiaria_completa.attr('selected','selected');   
-                    }else{
-                         tipoDiaria_meia.removeAttr('disabled');
-                         tipoDiaria_completa.removeAttr('selected');
-                         if (diferenciaHoras > 6){
-                              tipoDiaria_meia.removeAttr('selected');
-                              tipoDiaria_completa.removeAttr('disabled');
-                              tipoDiaria_meia.attr('disabled','disabled');
-                              tipoDiaria_completa.attr('selected','selected');
-                         }
-                         if (diferenciaHoras <= 6){
-                              tipoDiaria_meia.removeAttr('disabled');
-                              tipoDiaria_completa.removeAttr('selected');
-                              tipoDiaria_meia.attr('selected','selected');
-                              tipoDiaria_completa.attr('disabled','disabled');
+          horaRetorno.on('click', function(){
+               if (guardaValor.val() == ""){
+                    alert("Insira o horário de saída primeiro!");
+               }else{
+                    horaRetorno.on('change', function(){
+                    var horarioRetorno = horaRetorno.val();
+                    if (horarioRetorno != ""){
+                         var diariaSelecionada = $('#tipo_diaria option:selected').val();
+                         var horarioRetorno_convertido = convertHours(horarioRetorno);
+                         var horaSaida_valor = guardaValor.val();
+                         var diferenciaHoras = subHours(horaSaida_valor,horarioRetorno_convertido);
+                         diferenciaHoras = diferenciaHoras.replace(":",".");
+                         diferenciaHoras = parseFloat(diferenciaHoras);
+                         if (parseFloat(horarioRetorno_convertido.replace(":",".")) == parseFloat(horaSaida_valor.replace(":",".")) && diferenciaHoras == 0){
+                                   if (diariaSelecionada == "meia"){
+                                        tipoDiaria_meia.removeAttr('selected');
+                                        tipoDiaria_completa.removeAttr('disabled');
+                                   }
+                                   tipoDiaria_meia.attr('disabled','disabled');
+                                   tipoDiaria_completa.attr('selected','selected');
+                         }else{
+                              if (diferenciaHoras > 6){
+                                   if (diariaSelecionada == "meia"){
+                                        tipoDiaria_meia.removeAttr('selected');
+                                        tipoDiaria_completa.removeAttr('disabled');
+                                   }
+                                   tipoDiaria_meia.attr('disabled','disabled');
+                                   tipoDiaria_completa.attr('selected','selected');
+                              }
+                              if (diferenciaHoras <= 6){
+                                   if (diariaSelecionada == "completa"){
+                                        tipoDiaria_meia.removeAttr('disabled');
+                                        tipoDiaria_completa.removeAttr('selected');
+                                   }
+                                   tipoDiaria_meia.attr('selected','selected');
+                                   tipoDiaria_completa.attr('disabled','disabled');
+                              }
                          }
                     }
+                    })
                }
           })
 
