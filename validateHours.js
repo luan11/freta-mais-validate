@@ -4,11 +4,13 @@ var horaRetorno = $('#hora_retorno');
 var guardaValor = $('#guarda_valor');
 var tipoDiaria_meia = $('#meia');
 var tipoDiaria_completa = $('#completa');
+var aviso_hRetorno = $('#aviso_hRetorno');
 
 // pega horario de saida
 horaSaida.on('change', function(){
      var horarioSaida = horaSaida.val();
      var horaSaida_convertido = convertHours(horarioSaida);
+     aviso_hRetorno.removeAttr('hidden');
      // verifica se horario de saida é diferente de vazio
      if (horarioSaida != ""){
           guardaValor.attr('value',horaSaida_convertido);
@@ -27,18 +29,19 @@ horaRetorno.on('click', function(){
           // pega horario de retorno
           horaRetorno.on('change', function(){
           var horarioRetorno = horaRetorno.val();
+          aviso_hRetorno.attr('hidden','hidden');
           // verifica se o horario de retorno é diferente de vazio
           if (horarioRetorno != ""){
                // pega variaveis para trabalhar o calc de horas
                var diariaSelecionada = $('#tipo_diaria option:selected').val();
-               var horarioRetorno_convertido = convertHours(horarioRetorno);
+               var horaRetorno_convertido = convertHours(horarioRetorno);
                var horaSaida_valor = guardaValor.val();
                // efetua calculo de horas
-               var diferenciaHoras = subHours(horaSaida_valor,horarioRetorno_convertido);
+               var diferenciaHoras = subHours(horaSaida_valor,horaRetorno_convertido);
                diferenciaHoras = diferenciaHoras.replace(":",".");
                diferenciaHoras = parseFloat(diferenciaHoras);
                // faz as verficacoes do calculo de horas
-               if (parseFloat(horarioRetorno_convertido.replace(":",".")) == parseFloat(horaSaida_valor.replace(":",".")) && diferenciaHoras == 0){
+               if (parseFloat(horaRetorno_convertido.replace(":",".")) == parseFloat(horaSaida_valor.replace(":",".")) && diferenciaHoras == 0){
                          if (diariaSelecionada == "meia"){
                               tipoDiaria_meia.removeAttr('selected');
                               tipoDiaria_completa.removeAttr('disabled');

@@ -8,6 +8,8 @@
      <script src="moment.js"></script>
 </head>
 <body>
+
+     <div>
      <label for="hora_saida">Horário de saída:</label>
      <select class="form-control" name="hora_saida" id="hora_saida" required="">
           <option value="">Selecione</option>
@@ -60,7 +62,10 @@
           <option value="2300">23:00</option>
           <option value="2330">23:30</option>
      </select>
+     <span id="aviso_hRetorno" hidden>Agora selecione o horário de retorno!</span>
+     </div>
      
+     <div>
      <label for="hora_retorno">Horário de retorno:</label>
      <select class="form-control" name="hora_retorno" id="hora_retorno" required="">
           <option value="">Selecione</option>
@@ -113,13 +118,16 @@
           <option value="2300">23:00</option>
           <option value="2330">23:30</option>
      </select>
+     </div>
      
+     <div>
      <label for="tipo_diaria">Tipo de diária:</label>
      <select id="tipo_diaria" class="form-control" name="daily" required="">
           <option value="">Selecione o tipo da diária</option>
           <option id="meia" value="meia">Meia diária (6 horas)</option>
           <option id="completa" value="completa">Diária Completa (10 horas)</option>
      </select>
+     </div>
 
      <input id="guarda_valor" type="text" hidden>
 
