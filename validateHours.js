@@ -30,7 +30,6 @@ hora_retorno.on('click', function(){
           }
           if (aux_valor_saida.val() !== "" && aux_valor_retorno.val() !== ""){
                var diff_hours = calcHours(aux_valor_saida.val(),aux_valor_retorno.val());
-               console.log(diff_hours);
                if (diff_hours == 0){
                      if (diariaSelecionada == "meia"){
                          tipoDiaria_meia.removeAttr('selected');
@@ -70,44 +69,46 @@ function toCalc(hour){
 function calcHours(hourGoing,hourReturn){
      hourGoing = hourGoing.split(".");
      hourReturn = hourReturn.split(".");
+     hourGoing[0] = parseInt(hourGoing[0]);
+     hourGoing[1] = parseInt(hourGoing[1]);
+     hourReturn[0] = parseInt(hourReturn[0]);
+     hourReturn[1] = parseInt(hourReturn[1]);
 
      // calc indice 0 do array
      if (hourGoing[0] < hourReturn[0]){
           var diff_0 = hourReturn[0] - hourGoing[0];
      }
      if (hourGoing[0] > hourReturn[0]){
-          var diff_0 = 24 - hourGoing[0] + parseFloat(hourReturn[0]);
+          var diff_0 = 24 - hourGoing[0] + hourReturn[0];
      }
      if (hourGoing[0] == hourReturn[0]){
           var diff_0 = 0;
      }
 
      // calc indice 1 do array
-     if (parseInt(hourGoing[1]) == 30 && parseInt(hourReturn[1]) != 30){
-          var diff_1 = 30;
+     if (hourGoing[1] < hourReturn[1]){
+          var diff_1 = hourReturn[1] - hourGoing[1];
      }
-     if (parseInt(hourGoing[1]) != 30 && parseInt(hourReturn[1]) == 30){
-          var diff_1 = 30;
+     if (hourGoing[1] > hourReturn[1]){
+          var diff_1 =  hourGoing[1] - hourReturn[1];
      }
-     if (parseInt(hourGoing[1]) == parseInt(hourReturn[1])){
+     if (hourGoing[1] == hourReturn[1]){
           var diff_1 = 0;
      }
 
      // finaliza calc
-     if (diff_0 >= 10){
-          var diff = diff_0.toString() + diff_1.toString();
-          diff = diff.substr(0,2) + "." + diff.substr(2);
-          diff = parseFloat(diff,10);
+     /* ---------------------- */
+     if (hourGoing[0] < hourReturn[0] && hourGoing[1] > hourReturn[1]){
+          var diff = [diff_0,diff_1];
+          diff = diff.join(".");
+          diff = parseFloat((parseFloat(diff,10) - 1.0).toFixed(2));
+     }else{
+          var diff = [diff_0,diff_1];
+          diff = diff.join(".");
+          diff = parseFloat(diff);
      }
-     if (diff_0 < 10){
-          var diff = diff_0.toString() + diff_1.toString();
-          diff = diff.substr(0,1) + "." + diff.substr(1);
-          diff = parseFloat(diff,10);
-     }
+     /* ---------------------- */
 
-     if (diff == 0.3){
-          // diff = 23.3;
-     }
-
+     // return calc
      return diff;
 }
