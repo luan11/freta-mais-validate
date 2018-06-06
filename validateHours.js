@@ -30,7 +30,6 @@ hora_retorno.on('click', function(){
           }
           if (aux_valor_saida.val() !== "" && aux_valor_retorno.val() !== ""){
                var diff_hours = calcHours(aux_valor_saida.val(),aux_valor_retorno.val());
-               console.log(diff_hours);
                if (diff_hours == 0){
                      if (diariaSelecionada == "meia"){
                          tipoDiaria_meia.removeAttr('selected');
