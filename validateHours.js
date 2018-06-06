@@ -54,7 +54,7 @@ hora_retorno.on('click', function(){
                     tipoDiaria_meia.attr('selected','selected');
                     tipoDiaria_completa.attr('disabled','disabled');
                }
-          }
+               }
           }
      })
      }
@@ -96,9 +96,14 @@ function calcHours(hourGoing,hourReturn){
           var diff_1 = 0;
      }
 
+     // verifica se hora de retorno é menor que a hora de saida e a diferença seja igual à 0
+     if (hourGoing[0] == hourReturn[0] && diff_0 == 0 && diff_1 == 30){
+          diff_0 = 23;
+     }
+
      // finaliza calc
      /* ---------------------- */
-     if (hourGoing[0] < hourReturn[0] && hourGoing[1] > hourReturn[1]){
+     if ((hourGoing[0] < hourReturn[0] || hourGoing[0] > hourReturn[0]) && hourGoing[1] > hourReturn[1]){
           var diff = [diff_0,diff_1];
           diff = diff.join(".");
           diff = parseFloat((parseFloat(diff,10) - 1.0).toFixed(2));
