@@ -54,7 +54,7 @@ hora_retorno.on('click', function(){
                     tipoDiaria_meia.attr('selected','selected');
                     tipoDiaria_completa.attr('disabled','disabled');
                }
-               }
+          }
           }
      })
      }
@@ -66,7 +66,6 @@ function toCalc(hour){
      return hour;
 }
 
-// calc hours
 function calcHours(hourGoing,hourReturn){
      hourGoing = hourGoing.split(".");
      hourReturn = hourReturn.split(".");
@@ -87,7 +86,6 @@ function calcHours(hourGoing,hourReturn){
      }
 
      // calc indice 1 do array
-<<<<<<< HEAD
      if (hourGoing[1] < hourReturn[1]){
           var diff_1 = hourReturn[1] - hourGoing[1];
      }
@@ -108,41 +106,6 @@ function calcHours(hourGoing,hourReturn){
           var diff = [diff_0,diff_1];
           diff = diff.join(".");
           diff = parseFloat(diff);
-=======
-     if (parseInt(hourGoing[1]) < parseInt(hourReturn[1])){
-          var diff_1 = parseInt(hourReturn[1]) - parseInt(hourGoing[1]);
-          diff_1 = diff_1.toString();
-     }
-
-     if (parseInt(hourGoing[1]) > parseInt(hourReturn[1])){
-          var diff_1 =  parseInt(hourGoing[1]) - parseInt(hourReturn[1]);
-          diff_1 = diff_1.toString();
-     }
-
-     if (parseInt(hourGoing[1]) == parseInt(hourReturn[1])){
-          var diff_1 =  0;
-          diff_1 = diff_1.toString();
-     }
-
-     // finaliza calc
-     if (diff_0 >= 10){
-          var diff = diff_0.toString() + diff_1;
-          diff = diff.substr(0,2) + "." + diff.substr(2);
-          diff = parseFloat(diff,10);
-     }
-     if (diff_0 < 10){
-          var diff = diff_0.toString() + diff_1;
-          diff = diff.substr(0,1) + "." + diff.substr(1);
-          diff = parseFloat(diff,10);
-     }
-
-     if (diff == 0.3 && parseInt(hourGoing[1]) > parseInt(hourReturn[1])){
-          diff = 23.3;
-     }
-
-     if (diff == 1.3 && hourGoing[0] < hourReturn[0]){
-          diff = 0.3;
->>>>>>> bf7eb07ed7c95e3b334396bcdf1f99897e267c37
      }
      /* ---------------------- */
 
