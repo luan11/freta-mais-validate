@@ -30,7 +30,6 @@ hora_retorno.on('click', function(){
           }
           if (aux_valor_saida.val() !== "" && aux_valor_retorno.val() !== ""){
                var diff_hours = calcHours(aux_valor_saida.val(),aux_valor_retorno.val());
-               console.log(diff_hours);
                if (diff_hours == 0){
                      if (diariaSelecionada == "meia"){
                          tipoDiaria_meia.removeAttr('selected');
@@ -55,7 +54,7 @@ hora_retorno.on('click', function(){
                     tipoDiaria_meia.attr('selected','selected');
                     tipoDiaria_completa.attr('disabled','disabled');
                }
-          }
+               }
           }
      })
      }
@@ -83,30 +82,39 @@ function calcHours(hourGoing,hourReturn){
      }
 
      // calc indice 1 do array
-     if (parseInt(hourGoing[1]) == 30 && parseInt(hourReturn[1]) != 30){
-          var diff_1 = 30;
+     if (parseInt(hourGoing[1]) < parseInt(hourReturn[1])){
+          var diff_1 = parseInt(hourReturn[1]) - parseInt(hourGoing[1]);
+          diff_1 = diff_1.toString();
      }
-     if (parseInt(hourGoing[1]) != 30 && parseInt(hourReturn[1]) == 30){
-          var diff_1 = 30;
+
+     if (parseInt(hourGoing[1]) > parseInt(hourReturn[1])){
+          var diff_1 =  parseInt(hourGoing[1]) - parseInt(hourReturn[1]);
+          diff_1 = diff_1.toString();
      }
+
      if (parseInt(hourGoing[1]) == parseInt(hourReturn[1])){
-          var diff_1 = 0;
+          var diff_1 =  0;
+          diff_1 = diff_1.toString();
      }
 
      // finaliza calc
      if (diff_0 >= 10){
-          var diff = diff_0.toString() + diff_1.toString();
+          var diff = diff_0.toString() + diff_1;
           diff = diff.substr(0,2) + "." + diff.substr(2);
           diff = parseFloat(diff,10);
      }
      if (diff_0 < 10){
-          var diff = diff_0.toString() + diff_1.toString();
+          var diff = diff_0.toString() + diff_1;
           diff = diff.substr(0,1) + "." + diff.substr(1);
           diff = parseFloat(diff,10);
      }
 
-     if (diff == 0.3){
-          // diff = 23.3;
+     if (diff == 0.3 && parseInt(hourGoing[1]) > parseInt(hourReturn[1])){
+          diff = 23.3;
+     }
+
+     if (diff == 1.3 && hourGoing[0] < hourReturn[0]){
+          diff = 0.3;
      }
 
      return diff;
