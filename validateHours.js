@@ -66,6 +66,7 @@ function toCalc(hour){
      return hour;
 }
 
+// calc hours
 function calcHours(hourGoing,hourReturn){
      hourGoing = hourGoing.split(".");
      hourReturn = hourReturn.split(".");
