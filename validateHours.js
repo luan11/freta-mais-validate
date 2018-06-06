@@ -99,7 +99,7 @@ function calcHours(hourGoing,hourReturn){
      // verifica se hora de retorno é menor que a hora de saida e a diferença seja igual à 0
      if (diff_1 > 0 && hourGoing[1] != 0){
           if (hourGoing[0] == hourReturn[0] && diff_0 == 0 && diff_1 == 30){
-          diff_0 = 23;
+               diff_0 = 23;
           }
      }
 
